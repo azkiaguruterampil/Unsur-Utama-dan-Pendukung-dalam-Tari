@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maestro Tari: Edisi Ular Tangga</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Fredoka -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            fredoka: ['Fredoka', 'sans-serif'],
+          },
+          colors: {
+            nusantara: {
+              gold: '#F59E0B',
+              crimson: '#E11D48',
+              indigo: '#312E81',
+              teal: '#0D9488',
+              cream: '#FFFBEB',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Pengaturan Font Utama & Latar Belakang Bernuansa Seni Nusantara */
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: radial-gradient(circle at top left, #fef3c7 0%, #fde68a 25%, #fed7aa 55%, #fbcfe8 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    /* Pola Ornamen Batik Halus pada Latar */
+    .batik-pattern {
+      background-image: radial-gradient(#d97706 1px, transparent 1px), radial-gradient(#e11d48 1px, transparent 1px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
+    }
+
+    /* Tombol Taktil Bergaya Game Anak */
+    .btn-game {
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 6px 0 rgba(0, 0, 0, 0.22);
+    }
+    .btn-game:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 0 rgba(0, 0, 0, 0.22);
+    }
+    .btn-game:active:not(:disabled) {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.22);
+    }
+    .btn-game:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Animasi Kocok Dadu */
+    @keyframes diceShake {
+      0% { transform: rotate(0deg) scale(1); }
+      20% { transform: rotate(-18deg) scale(1.12); }
+      40% { transform: rotate(16deg) scale(1.15); }
+      60% { transform: rotate(-14deg) scale(1.12); }
+      80% { transform: rotate(12deg) scale(1.08); }
+      100% { transform: rotate(0deg) scale(1); }
+    }
+    .animate-dice {
+      animation: diceShake 0.45s ease-in-out infinite;
+    }
+
+    /* Animasi Pion Melompat */
+    @keyframes pawnHop {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-14px) scale(1.18); }
+    }
+    .animate-hop {
+      animation: pawnHop 0.28s ease-out;
+    }
+
+    /* Animasi Bintang Berdenyut pada Kotak Spesial */
+    @keyframes starPulse {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.22) rotate(12deg); }
+    }
+    .animate-star {
+      animation: starPulse 2s ease-in-out infinite;
+    }
+
+    /* Animasi Modal Muncul */
+    @keyframes modalPop {
+      0% { opacity: 0; transform: scale(0.85) translateY(16px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .animate-modal {
+      animation: modalPop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    /* Confetti Jatuh untuk Layar Kemenangan */
+    @keyframes confettiFall {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(105vh) rotate(720deg); opacity: 0.2; }
+    }
+    .confetti-piece {
+      position: fixed;
+      top: -20px;
+      z-index: 60;
+      pointer-events: none;
+      animation: confettiFall linear forwards;
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased flex flex-col justify-between">
+
+  <!-- Lapisan Latar Pola Halus -->
+  <div class="fixed inset-0 batik-pattern opacity-[0.07] pointer-events-none z-0"></div>
+
+  <!-- Container Confetti -->
+  <div id="confetti-container"></div>
+
+  <!-- =====================================================================
+       HEADER NAVIGASI GLOBAL
+       ===================================================================== -->
+  <header class="relative z-20 w-full max-w-6xl mx-auto px-4 pt-4 pb-2 flex items-center justify-between">
+    <div class="flex items-center gap-2.5 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-md border-2 border-amber-300">
+      <!-- Ikon Kipas Tari SVG -->
+      <svg class="w-8 h-8 text-rose-600 shrink-0" viewBox="0 0 64 64" fill="none">
+        <path d="M32 54L10 26C16 14 24 10 32 10C40 10 48 14 54 26L32 54Z" fill="#F43F5E" stroke="#881337" stroke-width="3"/>
+        <path d="M32 54L19 17M32 54L32 10M32 54L45 17" stroke="#FDE047" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="32" cy="52" r="4" fill="#F59E0B" stroke="#78350F" stroke-width="2"/>
+      </svg>
+      <div>
+        <h1 class="text-base sm:text-lg font-bold text-rose-700 leading-tight">Maestro Tari</h1>
+        <p class="text-[11px] sm:text-xs font-medium text-amber-700">Edisi Ular Tangga • Seni Budaya SMP</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <!-- Tombol Pengatur Suara -->
+      <button id="btn-sound-toggle" onclick="toggleSound()" title="Suara Efek"
+        class="btn-game bg-white hover:bg-amber-50 text-amber-700 border-2 border-amber-300 p-2.5 sm:px-3.5 sm:py-2 rounded-2xl font-semibold text-sm flex items-center gap-1.5">
+        <span id="sound-icon" class="text-lg">🔊</span>
+        <span id="sound-label" class="hidden sm:inline">Suara Aktif</span>
+      </button>
+
+      <!-- Tombol Kembali ke Beranda (Muncul saat di layar game / leaderboard) -->
+      <button id="btn-nav-home" onclick="requestGoHome()"
+        class="hidden btn-game bg-rose-500 hover:bg-rose-600 text-white border-2 border-rose-700 px-3.5 py-2 rounded-2xl font-semibold text-sm flex items-center gap-1.5">
+        <span>🏠</span>
+        <span class="hidden sm:inline">Menu Utama</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       MAIN CONTENT AREA
+       ===================================================================== -->
+  <main class="relative z-10 flex-grow flex items-center justify-center w-full max-w-6xl mx-auto px-4 py-4">
+
+    <!-- 1. HALAMAN AWAL (START SCREEN) -->
+    <section id="start-screen" class="w-full max-w-xl bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-amber-400 p-6 sm:p-8 animate-modal">
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-rose-500 via-amber-500 to-yellow-400 shadow-lg mb-3 border-4 border-white">
+          <span class="text-4xl">💃</span>
+        </div>
+        <span class="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 border border-amber-300">
+          Materi Seni Tari SMP • Unsur Utama & Pendukung
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-slate-800 tracking-tight">
+          Maestro <span class="text-rose-600">Tari</span>
+        </h2>
+        <p class="text-slate-600 text-sm sm:text-base mt-1">
+          Taklukkan papan 5×5, jawab kuis unsur tari di kotak <span class="font-bold text-amber-600">⭐ Spesial</span>, dan jadilah juara!
+        </p>
+        <div class="mt-3 inline-flex items-center gap-1.5 bg-rose-50 text-rose-700 text-xs sm:text-sm font-semibold px-3.5 py-1 rounded-full border border-rose-200 shadow-sm">
+          <span>✨</span>
+          <span>Kreator: <strong>Azkia Ismiati, M.Pd.</strong></span>
+        </div>
+      </div>
+
+      <!-- Form Input Pemain -->
+      <form id="start-form" onsubmit="startGame(event)" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Pemain 1 (Merah) -->
+          <div class="bg-rose-50 p-3.5 rounded-2xl border-2 border-rose-200">
+            <label for="input-p1" class="flex items-center gap-2 text-sm font-bold text-rose-700 mb-1.5">
+              <span class="w-4 h-4 rounded-full bg-rose-600 inline-block border-2 border-white shadow"></span>
+              Pemain 1 (Merah)
+            </label>
+            <input type="text" id="input-p1" maxlength="18" required placeholder="Contoh: Raka"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-rose-300 focus:border-rose-500 focus:outline-none font-semibold text-slate-800 text-sm" />
+          </div>
+
+          <!-- Pemain 2 (Biru) -->
+          <div class="bg-sky-50 p-3.5 rounded-2xl border-2 border-sky-200">
+            <label for="input-p2" class="flex items-center gap-2 text-sm font-bold text-sky-700 mb-1.5">
+              <span class="w-4 h-4 rounded-full bg-sky-600 inline-block border-2 border-white shadow"></span>
+              Pemain 2 (Biru)
+            </label>
+            <input type="text" id="input-p2" maxlength="18" required placeholder="Contoh: Sinta"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-sky-300 focus:border-sky-500 focus:outline-none font-semibold text-slate-800 text-sm" />
+          </div>
+        </div>
+
+        <!-- Kelas & Sekolah (Tim) -->
+        <div class="bg-amber-50 p-3.5 rounded-2xl border-2 border-amber-200">
+          <label for="input-team" class="flex items-center gap-2 text-sm font-bold text-amber-800 mb-1.5">
+            <span>🏫</span> Kelas & Sekolah (Tim)
+          </label>
+          <input type="text" id="input-team" maxlength="32" required placeholder="Contoh: Kelas 8B - SMPN 1 Nusantara"
+            class="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-amber-300 focus:border-amber-500 focus:outline-none font-semibold text-slate-800 text-sm" />
+        </div>
+
+        <!-- Panduan Singkat -->
+        <div class="bg-indigo-50/80 border-2 border-indigo-200 rounded-2xl p-3.5 text-xs sm:text-sm text-indigo-900 space-y-1">
+          <p class="font-bold flex items-center gap-1.5"><span>📜</span> Aturan Kotak Spesial (⭐):</p>
+          <ul class="list-disc list-inside space-y-0.5 text-indigo-800">
+            <li><strong>Kotak Tangga (🪜):</strong> Jawab kuis <b>BENAR</b> untuk naik tangga!</li>
+            <li><strong>Kotak Ular (🐍):</strong> Jawab kuis <b>BENAR</b> untuk bertahan; <b>SALAH</b> akan meluncur turun!</li>
+          </ul>
+        </div>
+
+        <!-- Tombol Aksi -->
+        <div class="pt-2 flex flex-col sm:flex-row gap-3">
+          <button type="submit"
+            class="btn-game flex-1 bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-bold text-base sm:text-lg py-3.5 px-6 rounded-2xl border-2 border-rose-700 flex items-center justify-center gap-2">
+            <span>🎲</span> Mulai Permainan
+          </button>
+          <button type="button" onclick="showScreen('leaderboard-screen')"
+            class="btn-game bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-base py-3.5 px-5 rounded-2xl border-2 border-indigo-800 flex items-center justify-center gap-2">
+            <span>🏆</span> Leaderboard
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- 2. HALAMAN PERMAINAN (GAME SCREEN) -->
+    <section id="game-screen" class="hidden w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        
+        <!-- Kolom Kiri / Tengah: Papan Ular Tangga 5x5 -->
+        <div class="lg:col-span-7 flex flex-col items-center">
+          <!-- Info Tim -->
+          <div class="w-full max-w-[460px] bg-white/90 backdrop-blur px-4 py-2 rounded-2xl border-2 border-amber-300 shadow-sm mb-3 flex items-center justify-between text-xs sm:text-sm">
+            <span class="font-bold text-amber-800 truncate">🏫 <span id="display-team">Tim Nusantara</span></span>
+            <span class="bg-amber-100 text-amber-800 font-bold px-2.5 py-0.5 rounded-full border border-amber-300 shrink-0">
+              Target: Kotak 25 🏆
+            </span>
+          </div>
+
+          <!-- Container Papan 5x5 Responsif -->
+          <div class="relative w-full max-w-[460px] aspect-square bg-amber-900 p-2.5 sm:p-3.5 rounded-3xl shadow-2xl border-4 border-amber-500">
+            <!-- Grid 25 Kotak -->
+            <div id="board-grid" class="relative w-full h-full grid grid-cols-5 grid-rows-5 gap-1.5 sm:gap-2 rounded-2xl overflow-hidden">
+              <!-- Kotak akan dirender oleh JavaScript -->
+            </div>
+
+            <!-- SVG Overlay untuk Visualisasi Tangga (Naik) & Ular (Turun) -->
+            <svg id="board-svg-overlay" viewBox="0 0 500 500" preserveAspectRatio="none"
+              class="absolute inset-2.5 sm:inset-3.5 w-[calc(100%-1.25rem)] sm:w-[calc(100%-1.75rem)] h-[calc(100%-1.25rem)] sm:h-[calc(100%-1.75rem)] pointer-events-none z-10">
+              <!-- Jalur tangga dan ular dirender oleh JavaScript -->
+            </svg>
+
+            <!-- Layer Pion Pemain Real-Time -->
+            <div id="pawns-layer"
+              class="absolute inset-2.5 sm:inset-3.5 w-[calc(100%-1.25rem)] sm:w-[calc(100%-1.75rem)] h-[calc(100%-1.25rem)] sm:h-[calc(100%-1.75rem)] pointer-events-none z-20">
+              <!-- Pion Pemain 1 (Merah) -->
+              <div id="pawn-0"
+                class="absolute w-8 h-8 sm:w-10 sm:h-10 -ml-4 -mt-4 sm:-ml-5 sm:-mt-5 transition-all duration-300 ease-out flex items-center justify-center">
+                <div class="w-full h-full rounded-full bg-gradient-to-br from-rose-400 to-rose-700 border-3 border-white shadow-lg flex items-center justify-center text-white font-bold text-xs sm:text-sm ring-2 ring-rose-900/40">
+                  P1
+                </div>
+              </div>
+              <!-- Pion Pemain 2 (Biru) -->
+              <div id="pawn-1"
+                class="absolute w-8 h-8 sm:w-10 sm:h-10 -ml-4 -mt-4 sm:-ml-5 sm:-mt-5 transition-all duration-300 ease-out flex items-center justify-center">
+                <div class="w-full h-full rounded-full bg-gradient-to-br from-sky-400 to-sky-700 border-3 border-white shadow-lg flex items-center justify-center text-white font-bold text-xs sm:text-sm ring-2 ring-sky-900/40">
+                  P2
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Legenda Papan -->
+          <div class="w-full max-w-[460px] mt-3 flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-slate-700 bg-white/85 px-3 py-2 rounded-2xl border border-amber-200">
+            <span class="flex items-center gap-1"><span class="text-base">⭐</span> Kotak Kuis Spesial</span>
+            <span class="flex items-center gap-1"><span class="inline-block w-3 h-3 rounded bg-emerald-500"></span> Tangga (Naik)</span>
+            <span class="flex items-center gap-1"><span class="inline-block w-3 h-3 rounded bg-purple-600"></span> Ular (Turun)</span>
+          </div>
+        </div>
+
+        <!-- Kolom Kanan: Panel Giliran, Dadu Interaktif & Statistik Pemain -->
+        <div class="lg:col-span-5 w-full max-w-[460px] mx-auto space-y-4">
+          
+          <!-- Kartu Giliran & Dadu Interaktif -->
+          <div class="bg-white/95 backdrop-blur-md rounded-3xl p-5 shadow-xl border-4 border-amber-400 text-center">
+            <div id="turn-badge" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold bg-rose-100 text-rose-700 border-2 border-rose-300 mb-3">
+              <span id="turn-dot" class="w-3 h-3 rounded-full bg-rose-600 animate-ping"></span>
+              <span id="turn-text">Giliran: Pemain 1</span>
+            </div>
+
+            <!-- Area Dadu Visual -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-5 my-2">
+              <button id="dice-visual" onclick="handleRollDice()" aria-label="Kocok Dadu"
+                class="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-white to-amber-50 rounded-3xl border-4 border-slate-800 shadow-xl flex items-center justify-center cursor-pointer hover:scale-105 transition-transform">
+                <!-- SVG Muka Dadu -->
+                <svg id="dice-svg" class="w-16 h-16 sm:w-20 sm:h-20 text-slate-800" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="11" fill="#E11D48"/>
+                </svg>
+              </button>
+
+              <div class="flex-1 text-center sm:text-left">
+                <p id="game-status-msg" class="text-sm sm:text-base font-semibold text-slate-700 min-h-[3rem] flex items-center justify-center sm:justify-start">
+                  Tekan tombol kocok dadu untuk memulai langkah!
+                </p>
+                <button id="btn-roll-dice" onclick="handleRollDice()"
+                  class="btn-game mt-2 w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-base sm:text-lg py-3 px-5 rounded-2xl border-2 border-amber-700 flex items-center justify-center gap-2">
+                  <span>🎲</span> Kocok Dadu
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kartu Status Pemain 1 & Pemain 2 -->
+          <div class="grid grid-cols-2 gap-3">
+            <!-- Kartu Pemain 1 -->
+            <div id="card-p0" class="bg-white/95 rounded-2xl p-3.5 border-4 border-rose-500 shadow-md transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center border-2 border-white shadow">P1</span>
+                <h3 id="name-p0" class="font-bold text-slate-800 text-sm sm:text-base truncate">Pemain 1</h3>
+              </div>
+              <div class="space-y-1 text-xs sm:text-sm text-slate-600">
+                <div class="flex justify-between">
+                  <span>Posisi:</span>
+                  <span class="font-bold text-rose-600">Kotak <span id="pos-p0">1</span></span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Lemparan:</span>
+                  <span class="font-bold text-slate-800"><span id="rolls-p0">0</span>x</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Kuis Benar:</span>
+                  <span class="font-bold text-emerald-600"><span id="correct-p0">0</span> ⭐</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Kartu Pemain 2 -->
+            <div id="card-p1" class="bg-white/80 rounded-2xl p-3.5 border-2 border-sky-200 shadow-md transition-all opacity-80">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="w-6 h-6 rounded-full bg-sky-600 text-white text-xs font-bold flex items-center justify-center border-2 border-white shadow">P2</span>
+                <h3 id="name-p1" class="font-bold text-slate-800 text-sm sm:text-base truncate">Pemain 2</h3>
+              </div>
+              <div class="space-y-1 text-xs sm:text-sm text-slate-600">
+                <div class="flex justify-between">
+                  <span>Posisi:</span>
+                  <span class="font-bold text-sky-600">Kotak <span id="pos-p1">1</span></span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Lemparan:</span>
+                  <span class="font-bold text-slate-800"><span id="rolls-p1">0</span>x</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Kuis Benar:</span>
+                  <span class="font-bold text-emerald-600"><span id="correct-p1">0</span> ⭐</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tombol Reset Cepat -->
+          <div class="flex justify-end">
+            <button onclick="requestRestartGame()"
+              class="text-xs font-bold text-slate-600 hover:text-rose-600 bg-white/80 hover:bg-white px-3.5 py-2 rounded-xl border border-slate-300 transition flex items-center gap-1.5">
+              <span>🔄</span> Ulangi Pertandingan
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. HALAMAN GAME OVER -->
+    <section id="gameover-screen" class="hidden w-full max-w-lg bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-amber-400 p-6 sm:p-8 text-center animate-modal">
+      <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-500 border-4 border-white shadow-xl mb-4">
+        <span class="text-5xl">👑</span>
+      </div>
+      
+      <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 border border-emerald-300">
+        Pertunjukan Selesai!
+      </span>
+      <h2 class="text-2xl sm:text-3xl font-bold text-slate-800">
+        Selamat, <span id="winner-name" class="text-rose-600">Pemenang</span>!
+      </h2>
+      <p id="winner-team" class="text-sm font-semibold text-slate-500 mt-1">Kelas 8B - SMPN 1 Nusantara</p>
+
+      <!-- Kartu Statistik Pemenang -->
+      <div class="bg-amber-50 rounded-2xl border-2 border-amber-200 p-4 my-5 space-y-2.5 text-sm">
+        <div class="flex justify-between items-center border-b border-amber-200 pb-2">
+          <span class="text-slate-600 font-medium">Total Lemparan Dadu Pemenang</span>
+          <span class="font-bold text-slate-800 text-base"><span id="winner-rolls">0</span> Lemparan</span>
+        </div>
+        <div class="flex justify-between items-center border-b border-amber-200 pb-2">
+          <span class="text-slate-600 font-medium">Kuis Unsur Tari Terjawab Benar</span>
+          <span class="font-bold text-emerald-600 text-base"><span id="winner-correct">0</span> Soal</span>
+        </div>
+        <div class="flex justify-between items-center pt-1">
+          <span class="text-slate-700 font-bold">Total Skor Maestro</span>
+          <span class="font-extrabold text-amber-600 text-xl"><span id="winner-score">0</span> Poin</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button onclick="showScreen('leaderboard-screen')"
+          class="btn-game flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-2xl border-2 border-indigo-800 flex items-center justify-center gap-2">
+          <span>🏆</span> Lihat Leaderboard
+        </button>
+        <button onclick="playAgainSamePlayers()"
+          class="btn-game flex-1 bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-bold py-3 px-4 rounded-2xl border-2 border-rose-700 flex items-center justify-center gap-2">
+          <span>🔄</span> Main Lagi
+        </button>
+      </div>
+    </section>
+
+    <!-- 4. HALAMAN LEADERBOARD -->
+    <section id="leaderboard-screen" class="hidden w-full max-w-2xl bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-indigo-400 p-6 sm:p-8 animate-modal">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 flex items-center gap-2">
+            <span>🏆</span> Papan Peringkat Maestro
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500">Rekor penari terbaik berdasarkan kecepatan langkah & ketepatan kuis</p>
+        </div>
+        <button onclick="requestResetLeaderboard()"
+          class="text-xs font-semibold text-rose-600 hover:bg-rose-50 px-3 py-1.5 rounded-xl border border-rose-200 transition">
+          Hapus Rekor
+        </button>
+      </div>
+
+      <!-- Podium 3 Besar -->
+      <div id="podium-container" class="grid grid-cols-3 gap-2 sm:gap-4 items-end mb-6 pt-4 px-2">
+        <!-- Dirender oleh JavaScript -->
+      </div>
+
+      <!-- Daftar Peringkat Lainnya -->
+      <div class="bg-slate-50 rounded-2xl border-2 border-slate-200 overflow-hidden">
+        <div class="max-h-60 overflow-y-auto divide-y divide-slate-200" id="leaderboard-list">
+          <!-- Dirender oleh JavaScript -->
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-center">
+        <button onclick="showScreen('start-screen')"
+          class="btn-game bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-2xl border-2 border-amber-700 flex items-center gap-2">
+          <span>🏠</span> Kembali ke Menu Utama
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =====================================================================
+       MODAL KUIS INTERAKTIF (KOTAK SPESIAL ⭐)
+       ===================================================================== -->
+  <div id="quiz-modal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl border-4 border-amber-400 p-5 sm:p-7 animate-modal max-h-[92vh] overflow-y-auto">
+      
+      <!-- Header Modal Kuis -->
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <span id="quiz-category-badge" class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full border border-indigo-300">
+          Unsur Utama Tari
+        </span>
+        <span id="quiz-stake-badge" class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full border border-emerald-300">
+          🪜 Tangga: Jawab Benar untuk Naik!
+        </span>
+      </div>
+
+      <!-- Pertanyaan -->
+      <div class="bg-amber-50/80 border-2 border-amber-200 rounded-2xl p-4 mb-4">
+        <p class="text-xs font-bold text-amber-700 uppercase tracking-wide mb-1">
+          Pertanyaan untuk <span id="quiz-player-name" class="underline">Pemain</span>:
+        </p>
+        <h3 id="quiz-question-text" class="text-base sm:text-lg font-bold text-slate-800 leading-snug">
+          Memuat pertanyaan...
+        </h3>
+      </div>
+
+      <!-- Pilihan Jawaban A, B, C, D -->
+      <div id="quiz-options-container" class="space-y-2.5">
+        <!-- Tombol opsi dirender oleh JavaScript -->
+      </div>
+
+      <!-- Kotak Feedback & Pembahasan (Muncul setelah menjawab) -->
+      <div id="quiz-feedback-box" class="hidden mt-4 p-4 rounded-2xl border-2">
+        <p id="quiz-feedback-title" class="font-bold text-base mb-1"></p>
+        <p id="quiz-feedback-explanation" class="text-xs sm:text-sm leading-relaxed"></p>
+        <button id="btn-quiz-continue" onclick="closeQuizAndResolve()"
+          class="btn-game mt-3 w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-4 rounded-xl text-sm sm:text-base">
+          Lanjutkan Langkah ➡️
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODAL KONFIRMASI KUSTOM (PENGGANTI ALERT / CONFIRM BAWAAN)
+       ===================================================================== -->
+  <div id="confirm-modal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl border-4 border-rose-400 p-6 text-center animate-modal">
+      <div class="text-4xl mb-2">🤔</div>
+      <h3 id="confirm-title" class="text-xl font-bold text-slate-800 mb-1">Konfirmasi</h3>
+      <p id="confirm-message" class="text-sm text-slate-600 mb-5">Apakah Anda yakin?</p>
+      <div class="flex gap-3">
+        <button onclick="closeConfirmModal()"
+          class="btn-game flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-2.5 px-4 rounded-xl border-2 border-slate-400">
+          Batal
+        </button>
+        <button id="btn-confirm-yes"
+          class="btn-game flex-1 bg-rose-500 hover:bg-rose-600 text-white font-bold py-2.5 px-4 rounded-xl border-2 border-rose-700">
+          Ya, Lanjutkan
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="relative z-10 text-center py-3 px-4 text-xs font-medium text-amber-900/75">
+    Maestro Tari: Edisi Ular Tangga • Media Pembelajaran Interaktif Seni Budaya SMP • Kreator: Azkia Ismiati, M.Pd.
+  </footer>
+
+  <!-- =====================================================================
+       JAVASCRIPT: AUDIO SYNTHESIZER, BANK SOAL & LOGIKA PERMAINAN
+       ===================================================================== -->
+  <script>
+    /* =========================================================================
+       1. SISTEM EFEK SUARA BERBASIS WEB AUDIO API
+       ========================================================================= */
+    const SoundFX = {
+      ctx: null,
+      enabled: true,
+
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) {
+            this.ctx = new AudioCtx();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      },
+
+      playTone(freq, type = 'sine', duration = 0.15, startTimeOffset = 0, gainVal = 0.18) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        const now = this.ctx.currentTime + startTimeOffset;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(gainVal, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + duration);
+      },
+
+      roll() {
+        // Suara ketukan kayu dadu bergulir
+        for (let i = 0; i < 6; i++) {
+          this.playTone(220 + (i % 3) * 70, 'triangle', 0.06, i * 0.065, 0.15);
+        }
+      },
+
+      step(stepIndex = 0) {
+        // Nada pentatonik gamelan lembut saat pion melangkah
+        const scale = [392, 440, 523.25, 587.33, 659.25];
+        const freq = scale[stepIndex % scale.length];
+        this.playTone(freq, 'sine', 0.12, 0, 0.16);
+      },
+
+      correct() {
+        // Melodi ceria jawaban benar
+        this.playTone(523.25, 'triangle', 0.14, 0, 0.2);
+        this.playTone(659.25, 'triangle', 0.14, 0.1, 0.2);
+        this.playTone(783.99, 'triangle', 0.16, 0.2, 0.2);
+        this.playTone(1046.5, 'triangle', 0.32, 0.3, 0.22);
+      },
+
+      wrong() {
+        // Nada turun lembut jawaban salah
+        this.playTone(330, 'sawtooth', 0.18, 0, 0.12);
+        this.playTone(277.18, 'sawtooth', 0.28, 0.16, 0.12);
+      },
+
+      ladder() {
+        // Efek naik tangga
+        const notes = [440, 523.25, 659.25, 783.99, 987.77, 1174.66];
+        notes.forEach((n, idx) => this.playTone(n, 'sine', 0.12, idx * 0.07, 0.18));
+      },
+
+      snake() {
+        // Efek meluncur turun ular
+        const notes = [783.99, 659.25, 523.25, 440, 349.23, 261.63];
+        notes.forEach((n, idx) => this.playTone(n, 'triangle', 0.13, idx * 0.07, 0.16));
+      },
+
+      win() {
+        // Fanfare kemenangan
+        const melody = [
+          { f: 523.25, d: 0.15, t: 0 },
+          { f: 523.25, d: 0.15, t: 0.16 },
+          { f: 523.25, d: 0.15, t: 0.32 },
+          { f: 659.25, d: 0.35, t: 0.48 },
+          { f: 587.33, d: 0.2, t: 0.86 },
+          { f: 659.25, d: 0.2, t: 1.08 },
+          { f: 783.99, d: 0.55, t: 1.3 }
+        ];
+        melody.forEach(m => this.playTone(m.f, 'triangle', m.d, m.t, 0.24));
+      }
+    };
+
+    function toggleSound() {
+      SoundFX.enabled = !SoundFX.enabled;
+      const icon = document.getElementById('sound-icon');
+      const label = document.getElementById('sound-label');
+      if (SoundFX.enabled) {
+        icon.textContent = '🔊';
+        label.textContent = 'Suara Aktif';
+        SoundFX.step(2);
+      } else {
+        icon.textContent = '🔇';
+        label.textContent = 'Suara Mati';
+      }
+    }
+
+    /* =========================================================================
+       2. BANK SOAL SENI TARI SMP (30 SOAL BERKUALITAS)
+       Materi: Unsur Utama (Wiraga, Wirama, Wirasa) & Unsur Pendukung Tari
+       ========================================================================= */
+    const QUESTION_BANK = [
+      {
+        category: "Unsur Utama • Pengertian Dasar",
+        question: "Tiga unsur utama yang wajib ada dalam sebuah karya seni tari agar memiliki nilai keindahan utuh adalah...",
+        options: [
+          "Wiraga, Wirama, dan Wirasa",
+          "Tata rias, tata busana, dan properti",
+          "Pola lantai, tata lampu, dan panggung",
+          "Iringan, tempat pentas, dan penonton"
+        ],
+        answer: 0,
+        explanation: "Unsur utama tari terdiri atas Wiraga (raga/gerak), Wirama (irama/tempo), dan Wirasa (penghayatan/ekspresi)."
+      },
+      {
+        category: "Unsur Utama • Wiraga",
+        question: "Kemampuan seorang penari dalam mengolah gerak tubuh secara terampil, lentur, seimbang, dan bertenaga disebut...",
+        options: [
+          "Wirasa",
+          "Wirama",
+          "Wiraga",
+          "Wicara"
+        ],
+        answer: 2,
+        explanation: "Wiraga berasal dari kata 'raga' yang berarti kemampuan fisik penari dalam menampilkan gerak tari dengan baik."
+      },
+      {
+        category: "Unsur Utama • Wirama",
+        question: "Ketepatan gerak penari dalam mengikuti ketukan, tempo, dan alunan musik pengiring merupakan wujud dari unsur...",
+        options: [
+          "Wiraga",
+          "Wirama",
+          "Wirasa",
+          "Tata Busana"
+        ],
+        answer: 1,
+        explanation: "Wirama berkaitan dengan kepekaan penari terhadap ritme, ketukan, dan tempo musik agar gerak selaras dengan iringan."
+      },
+      {
+        category: "Unsur Utama • Wirasa",
+        question: "Saat membawakan Tari Topeng Klana yang berkarakter gagah dan berwibawa, penari menampilkannya melalui penjiwaan dan ekspresi. Unsur utama yang ditonjolkan adalah...",
+        options: [
+          "Wirasa",
+          "Wirama",
+          "Pola Lantai",
+          "Properti Tari"
+        ],
+        answer: 0,
+        explanation: "Wirasa adalah kemampuan penari menghayati karakter dan menyampaikan emosi tarian melalui mimik serta penjiwaan gerak."
+      },
+      {
+        category: "Unsur Utama • Jenis Gerak",
+        question: "Gerak tari yang diolah semata-mata untuk mendapatkan bentuk artistik dan keindahan tanpa mengandung maksud atau cerita tertentu disebut...",
+        options: [
+          "Gerak maknawi",
+          "Gerak murni",
+          "Gerak imitatif",
+          "Gerak pantomim"
+        ],
+        answer: 1,
+        explanation: "Gerak murni (pure movement) hanya mengutamakan nilai estetis bentuk gerak tanpa melambangkan arti khusus."
+      },
+      {
+        category: "Unsur Utama • Jenis Gerak",
+        question: "Gerak 'ulap-ulap' (tangan di atas alis seolah melihat ke kejauhan) dan gerak memanah dalam tari tradisional termasuk ke dalam...",
+        options: [
+          "Gerak murni",
+          "Gerak maknawi",
+          "Gerak acak",
+          "Gerak refleks"
+        ],
+        answer: 1,
+        explanation: "Gerak maknawi (gesture) adalah gerak yang telah distilir dan mengandung makna atau pesan tertentu yang dapat dipahami penonton."
+      },
+      {
+        category: "Unsur Utama • Elemen Gerak",
+        question: "Dalam unsur wiraga, perbedaan intensitas kekuatan saat penari mengentakkan kaki dengan tegas dibandingkan melambaikan tangan dengan lembut berkaitan dengan elemen...",
+        options: [
+          "Tenaga",
+          "Tata rias",
+          "Pola lantai",
+          "Tata panggung"
+        ],
+        answer: 0,
+        explanation: "Setiap gerak tari memerlukan elemen dasar berupa ruang, waktu, dan tenaga (intensitas kuat, sedang, atau lemah)."
+      },
+      {
+        category: "Unsur Utama • Wirama",
+        question: "Irama dalam tari yang mengikuti ketukan teratur dan ajeg (tetap) dari awal hingga akhir bagian tarian disebut...",
+        options: [
+          "Wirama bebas",
+          "Wirama tandak",
+          "Wirasa dramatis",
+          "Wiraga dinamis"
+        ],
+        answer: 1,
+        explanation: "Wirama tandak adalah irama yang ajeg/tetap ketukannya, sedangkan wirama bebas mengikuti alunan vokal atau tembang."
+      },
+      {
+        category: "Unsur Utama • Wirasa",
+        question: "Pada Tari Pendet dari Bali yang berfungsi sebagai tari penyambutan, mimik wajah penari yang sesuai dengan unsur wirasa adalah...",
+        options: [
+          "Murung dan menunduk lesu",
+          "Marah dengan tatapan tajam menantang",
+          "Ceria, ramah, dan penuh sukacita",
+          "Datar tanpa ekspresi apa pun"
+        ],
+        answer: 2,
+        explanation: "Tari Pendet menggambarkan rasa syukur dan sukacita menyambut tamu, sehingga wirasanya diwujudkan lewat senyum ramah dan tatapan mata hidup (seledet)."
+      },
+      {
+        category: "Unsur Pendukung • Tata Rias",
+        question: "Salah satu fungsi utama tata rias dalam pertunjukan seni tari adalah...",
+        options: [
+          "Menggantikan iringan musik yang mati",
+          "Mempertegas garis wajah dan membentuk karakter tokoh tari",
+          "Menentukan arah hadap penari di lantai",
+          "Mengatur volume suara gamelan"
+        ],
+        answer: 1,
+        explanation: "Tata rias panggung berfungsi memperjelas ekspresi wajah dari jarak jauh sekaligus memperkuat karakter tokoh yang dibawakan."
+      },
+      {
+        category: "Unsur Pendukung • Tata Rias",
+        question: "Riasan wajah dengan alis tebal menukik, kumis melintang, dan warna merah tegas pada tari klasik biasanya digunakan untuk memperkuat karakter...",
+        options: [
+          "Putri lembut dan pemalu",
+          "Tokoh gagah, berani, atau angkara murka",
+          "Anak-anak yang lugu",
+          "Bidadari kayangan"
+        ],
+        answer: 1,
+        explanation: "Garis wajah tajam dan warna tegas dalam tata rias karakter melambangkan sifat gagah, berwibawa, atau garang."
+      },
+      {
+        category: "Unsur Pendukung • Tata Busana",
+        question: "Selain memperindah penampilan, tata busana (kostum) tari harus dirancang dengan mempertimbangkan...",
+        options: [
+          "Harga kain yang paling mahal",
+          "Kenyamanan dan keleluasaan penari saat bergerak",
+          "Berat kostum agar penari sulit melompat",
+          "Warna yang sama persis dengan tirai belakang"
+        ],
+        answer: 1,
+        explanation: "Tata busana tari wajib mendukung kenyamanan ruang gerak penari di samping mencerminkan identitas daerah dan tema tarian."
+      },
+      {
+        category: "Unsur Pendukung • Tata Busana",
+        question: "Kain selendang panjang yang diikatkan di pinggang penari Jawa atau Sunda dan sering dimainkan saat menari disebut...",
+        options: [
+          "Tanjak",
+          "Sampur",
+          "Ulos",
+          "Destar"
+        ],
+        answer: 1,
+        explanation: "Sampur adalah selendang tari yang menjadi bagian tata busana sekaligus dapat difungsikan sebagai properti gerak."
+      },
+      {
+        category: "Unsur Pendukung • Iringan Tari",
+        question: "Iringan musik tari yang sumber bunyinya berasal dari tubuh penari itu sendiri (seperti tepuk tangan, tepuk dada, dan nyanyian) disebut...",
+        options: [
+          "Iringan eksternal",
+          "Iringan internal",
+          "Iringan orkestra",
+          "Iringan elektronik"
+        ],
+        answer: 1,
+        explanation: "Iringan internal dihasilkan langsung oleh penari tanpa alat musik tambahan, contohnya pada Tari Saman dan Tari Kecak."
+      },
+      {
+        category: "Unsur Pendukung • Iringan Tari",
+        question: "Manakah pasangan tarian Nusantara berikut yang menggunakan iringan musik internal?",
+        options: [
+          "Tari Gambyong dan Tari Jaipong",
+          "Tari Saman dan Tari Kecak",
+          "Tari Piring dan Tari Lilin",
+          "Tari Merak dan Tari Topeng"
+        ],
+        answer: 1,
+        explanation: "Tari Saman mengandalkan tepukan tangan/dada serta syair, sedangkan Tari Kecak mengandalkan seruan vokal 'cak-cak-cak' penari."
+      },
+      {
+        category: "Unsur Pendukung • Iringan Tari",
+        question: "Penggunaan seperangkat gamelan, talempong, atau tifa untuk mengiringi pertunjukan tari termasuk kategori...",
+        options: [
+          "Iringan internal",
+          "Iringan eksternal",
+          "Tata panggung",
+          "Pola lantai"
+        ],
+        answer: 1,
+        explanation: "Iringan eksternal berasal dari luar tubuh penari, yaitu alat musik yang dimainkan pemusik maupun rekaman audio."
+      },
+      {
+        category: "Unsur Pendukung • Iringan Tari",
+        question: "Selain sebagai pengatur tempo gerak, fungsi lain iringan musik dalam tari adalah...",
+        options: [
+          "Membangun suasana dramatis dan memberi tanda perubahan gerak",
+          "Menggantikan posisi penari yang absen",
+          "Menentukan ukuran luas panggung",
+          "Menghapus kebutuhan tata cahaya"
+        ],
+        answer: 0,
+        explanation: "Musik pengiring berperan menghidupkan suasana (gembira, sedih, tegang) serta memberi aksen atau aba-aba perpindahan gerak."
+      },
+      {
+        category: "Unsur Pendukung • Properti Tari",
+        question: "Segala kelengkapan atau alat bantu yang dibawa dan dimainkan oleh penari untuk mendukung makna gerak disebut...",
+        options: [
+          "Tata panggung",
+          "Properti tari",
+          "Pola lantai",
+          "Tata lampu"
+        ],
+        answer: 1,
+        explanation: "Properti tari adalah benda yang dipegang/dimainkan penari sebagai bagian dari koreografi, seperti kipas, keris, payung, atau piring."
+      },
+      {
+        category: "Unsur Pendukung • Properti Tari",
+        question: "Tari Pakarena dari Sulawesi Selatan sangat ikonik dengan penggunaan properti berupa...",
+        options: [
+          "Piring keramik",
+          "Kipas",
+          "Tombak dan tameng",
+          "Topeng kayu"
+        ],
+        answer: 1,
+        explanation: "Tari Pakarena menggunakan kipas sebagai properti utama dengan gerak lembut yang kontras dengan tabuhan gendang yang dinamis."
+      },
+      {
+        category: "Unsur Pendukung • Properti Tari",
+        question: "Properti utama yang digunakan oleh para penari dalam Tari Piring dari Sumatera Barat adalah...",
+        options: [
+          "Piring yang diayunkan di telapak tangan",
+          "Bokor berisi taburan bunga",
+          "Payung kertas berwarna-warni",
+          "Busur dan anak panah"
+        ],
+        answer: 0,
+        explanation: "Penari Tari Piring mengayunkan piring dengan gerak cepat dan lincah tanpa terjatuh sebagai simbol rasa syukur atas hasil panen."
+      },
+      {
+        category: "Unsur Pendukung • Properti Tari",
+        question: "Tari Bondan dari Jawa Tengah menceritakan kasih sayang seorang ibu kepada anaknya dengan menggunakan properti khas berupa...",
+        options: [
+          "Keris dan panah",
+          "Payung, kendi, dan boneka bayi",
+          "Kipas dan selendang",
+          "Tifa dan tombak"
+        ],
+        answer: 1,
+        explanation: "Penari Tari Bondan menggendong boneka bayi, memegang payung terbuka, dan menari dengan lincah di atas kendi."
+      },
+      {
+        category: "Unsur Pendukung • Pola Lantai",
+        question: "Garis-garis imajiner di lantai yang dilalui oleh penari atau garis formasi yang dibentuk oleh penari kelompok disebut...",
+        options: [
+          "Pola lantai",
+          "Tata rias",
+          "Wirama",
+          "Properti"
+        ],
+        answer: 0,
+        explanation: "Pola lantai membantu penataan komposisi penari di atas pentas agar tampak dinamis, rapi, dan tidak bertabrakan."
+      },
+      {
+        category: "Unsur Pendukung • Pola Lantai",
+        question: "Secara garis besar, semua variasi pola lantai dalam seni tari dikembangkan dari dua bentuk garis dasar, yaitu...",
+        options: [
+          "Garis putus-putus dan garis tebal",
+          "Garis lurus dan garis lengkung",
+          "Garis batas dan garis tepi",
+          "Garis datar dan garis miring saja"
+        ],
+        answer: 1,
+        explanation: "Dua garis dasar pola lantai adalah garis lurus (horizontal, vertikal, diagonal, zig-zag) dan garis lengkung (lingkaran, angka delapan)."
+      },
+      {
+        category: "Unsur Pendukung • Pola Lantai",
+        question: "Pola lantai garis lurus (seperti vertikal, horizontal, dan diagonal) umumnya memberikan kesan...",
+        options: [
+          "Lemah dan ragu-ragu",
+          "Sederhana namun kuat, tegas, dan dinamis",
+          "Kacau dan tidak teratur",
+          "Melingkar tanpa ujung"
+        ],
+        answer: 1,
+        explanation: "Pola lantai garis lurus memancarkan kesan kekuatan, ketegasan, kejujuran, serta kedinamisan gerak."
+      },
+      {
+        category: "Unsur Pendukung • Pola Lantai",
+        question: "Tari Saman dari Aceh terkenal dengan kekompakan penarinya yang duduk berbanjar membentuk pola lantai...",
+        options: [
+          "Lingkaran besar",
+          "Garis lurus horizontal",
+          "Angka delapan",
+          "Lengkung ular"
+        ],
+        answer: 1,
+        explanation: "Penari Tari Saman duduk berjajar lurus secara horizontal dari kiri ke kanan untuk menunjukkan kebersamaan dan kekompakan."
+      },
+      {
+        category: "Unsur Pendukung • Pola Lantai",
+        question: "Tari Kecak dari Bali dan Tari Randai dari Sumatera Barat menampilkan puluhan penari yang membentuk pola lantai...",
+        options: [
+          "Garis lengkung berbentuk lingkaran",
+          "Garis lurus vertikal satu baris",
+          "Segitiga sama kaki",
+          "Huruf V terbalik"
+        ],
+        answer: 0,
+        explanation: "Pola lantai lingkaran pada Tari Kecak dan Randai menciptakan kesan akrab, persatuan, dan suasana sakral/magis."
+      },
+      {
+        category: "Unsur Pendukung • Tata Panggung",
+        question: "Jenis panggung pertunjukan tari yang hanya memiliki satu arah pandang dari depan (seperti bingkai gambar) disebut panggung...",
+        options: [
+          "Arena",
+          "Proscenium",
+          "Lapangan terbuka",
+          "Pendopo melingkar"
+        ],
+        answer: 1,
+        explanation: "Panggung proscenium membatasi arah pandang penonton hanya dari sisi depan sehingga penataan artistik lebih terfokus."
+      },
+      {
+        category: "Unsur Pendukung • Tata Cahaya",
+        question: "Fungsi utama tata lampu (pencahayaan) dalam pertunjukan tari di gedung tertutup adalah...",
+        options: [
+          "Menerangi area pentas, membangun suasana, dan memfokuskan perhatian penonton",
+          "Membuat penari merasa kepanasan di panggung",
+          "Menggantikan fungsi selendang dan kipas",
+          "Mengatur ketukan kendang"
+        ],
+        answer: 0,
+        explanation: "Tata cahaya (lighting) berfungsi menerangi penari, menciptakan efek suasana (pagi, malam, dramatis), dan menonjolkan bagian penting."
+      },
+      {
+        category: "Unsur Pendukung • Tata Panggung",
+        question: "Panggung pertunjukan tari yang posisinya dikelilingi oleh penonton dari segala arah (360 derajat) disebut panggung...",
+        options: [
+          "Proscenium",
+          "Arena",
+          "Balkon",
+          "Layar tancap"
+        ],
+        answer: 1,
+        explanation: "Pada panggung arena, penonton duduk mengelilingi area pentas sehingga koreografer harus mengatur arah hadap ke segala sisi."
+      },
+      {
+        category: "Analisis Terpadu • Unsur Tari",
+        question: "Apabila seorang penari menguasai hafalan gerak dengan lincah (wiraga) dan tepat ketukan musik (wirama), tetapi wajahnya tampak datar tanpa penjiwaan, maka unsur yang masih kurang adalah...",
+        options: [
+          "Wirasa",
+          "Tata busana",
+          "Pola lantai",
+          "Properti tari"
+        ],
+        answer: 0,
+        explanation: "Keberhasilan tari membutuhkan keseimbangan ketiganya; tanpa wirasa (penghayatan), tarian terasa hampa dan kurang menyentuh penonton."
+      }
+    ];
+
+    /* =========================================================================
+       3. KONFIGURASI PAPAN 5x5 ZIG-ZAG, TANGGA (NAIK) & ULAR (TURUN)
+       ========================================================================= */
+    // Peta Kotak Spesial (⭐):
+    // Ladders (Tangga - Naik): 3 -> 13, 6 -> 17, 9 -> 19, 15 -> 24
+    // Snakes (Ular - Turun):   12 -> 2, 18 -> 7, 21 -> 11, 23 -> 14
+    const SPECIAL_TILES = {
+      3:  { type: 'ladder', target: 13, label: 'Tangga Wiraga' },
+      6:  { type: 'ladder', target: 17, label: 'Tangga Wirama' },
+      9:  { type: 'ladder', target: 19, label: 'Tangga Wirasa' },
+      15: { type: 'ladder', target: 24, label: 'Tangga Maestro' },
+      12: { type: 'snake',  target: 2,  label: 'Ular Lupa Tempo' },
+      18: { type: 'snake',  target: 7,  label: 'Ular Salah Pola' },
+      21: { type: 'snake',  target: 11, label: 'Ular Kurang Ekspresi' },
+      23: { type: 'snake',  target: 14, label: 'Ular Properti Jatuh' }
+    };
+
+    // Palet warna ceria bergantian untuk kotak 1 - 25
+    const TILE_COLORS = [
+      'bg-amber-100 text-amber-900 border-amber-300',
+      'bg-rose-100 text-rose-900 border-rose-300',
+      'bg-sky-100 text-sky-900 border-sky-300',
+      'bg-emerald-100 text-emerald-900 border-emerald-300',
+      'bg-purple-100 text-purple-900 border-purple-300'
+    ];
+
+    /* =========================================================================
+       4. STATE PERMAINAN GLOBAL
+       ========================================================================= */
+    let gameState = {
+      players: [
+        { name: 'Pemain 1', color: 'red', pos: 1, rolls: 0, correct: 0 },
+        { name: 'Pemain 2', color: 'blue', pos: 1, rolls: 0, correct: 0 }
+      ],
+      team: 'Kelas 8 - SMP Nusantara',
+      currentTurn: 0, // 0 = Pemain 1, 1 = Pemain 2
+      isAnimating: false,
+      questionPool: [],
+      pendingSpecial: null, // Menyimpan data kuis & rute tangga/ular yang aktif
+      lastAnswerCorrect: false
+    };
+
+    const LEADERBOARD_KEY = 'maestro_tari_leaderboard_v1';
+
+    /* =========================================================================
+       5. KONVERSI NOMOR KOTAK (1..25) KE KOORDINAT ZIG-ZAG (ROW, COL)
+       ========================================================================= */
+    function getGridCoords(squareNum) {
+      // squareNum: 1..25
+      // Row 0 adalah paling atas (21..25), Row 4 adalah paling bawah (1..5)
+      const zeroBased = squareNum - 1;
+      const rowFromBottom = Math.floor(zeroBased / 5); // 0..4
+      const row = 4 - rowFromBottom; // 4..0
+      let col = zeroBased % 5;
+      // Baris genap dari bawah (rowFromBottom 0, 2, 4) berjalan kiri -> kanan
+      // Baris ganjil dari bawah (rowFromBottom 1, 3) berjalan kanan -> kiri (zig-zag)
+      if (rowFromBottom % 2 === 1) {
+        col = 4 - col;
+      }
+      return { row, col };
+    }
+
+    function getSquareFromGrid(row, col) {
+      const rowFromBottom = 4 - row;
+      const effectiveCol = (rowFromBottom % 2 === 1) ? (4 - col) : col;
+      return rowFromBottom * 5 + effectiveCol + 1;
+    }
+
+    /* =========================================================================
+       6. RENDER PAPAN 5x5 & VISUAL SVG TANGGA + ULAR
+       ========================================================================= */
+    function renderBoard() {
+      const gridEl = document.getElementById('board-grid');
+      gridEl.innerHTML = '';
+
+      for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 5; c++) {
+          const num = getSquareFromGrid(r, c);
+          const special = SPECIAL_TILES[num];
+          const colorClass = TILE_COLORS[(num - 1) % TILE_COLORS.length];
+
+          const cell = document.createElement('div');
+          cell.id = `tile-${num}`;
+          cell.className = `relative rounded-xl border-2 flex flex-col items-center justify-center p-1 select-none transition-transform ${colorClass}`;
+
+          if (num === 1) {
+            cell.classList.add('ring-2', 'ring-amber-500', 'bg-amber-200');
+          } else if (num === 25) {
+            cell.classList.add('ring-2', 'ring-yellow-500', 'bg-gradient-to-br', 'from-yellow-200', 'to-amber-300');
+          }
+
+          let badgeHTML = '';
+          if (num === 1) {
+            badgeHTML = `<span class="text-[9px] sm:text-[11px] font-extrabold uppercase tracking-tighter bg-amber-600 text-white px-1.5 rounded">Mulai</span>`;
+          } else if (num === 25) {
+            badgeHTML = `<span class="text-sm sm:text-lg leading-none">🏆</span>`;
+          } else if (special) {
+            const isLadder = special.type === 'ladder';
+            badgeHTML = `
+              <span class="animate-star text-sm sm:text-lg leading-none drop-shadow" title="${special.label}">⭐</span>
+              <span class="text-[8px] sm:text-[10px] font-extrabold px-1 rounded ${isLadder ? 'bg-emerald-600 text-white' : 'bg-purple-700 text-white'}">
+                ${isLadder ? '▲' + special.target : '▼' + special.target}
+              </span>
+            `;
+          }
+
+          cell.innerHTML = `
+            <span class="absolute top-1 left-1.5 text-[11px] sm:text-xs font-extrabold opacity-75">${num}</span>
+            <div class="mt-2 flex flex-col items-center justify-center">${badgeHTML}</div>
+          `;
+          gridEl.appendChild(cell);
+        }
+      }
+
+      renderBoardConnectors();
+    }
+
+    function renderBoardConnectors() {
+      const svg = document.getElementById('board-svg-overlay');
+      svg.innerHTML = '';
+
+      Object.entries(SPECIAL_TILES).forEach(([startStr, info]) => {
+        const startNum = parseInt(startStr, 10);
+        const endNum = info.target;
+
+        const p1 = getGridCoords(startNum);
+        const p2 = getGridCoords(endNum);
+
+        // Titik tengah masing-masing sel pada sistem koordinat 500x500
+        const x1 = p1.col * 100 + 50;
+        const y1 = p1.row * 100 + 50;
+        const x2 = p2.col * 100 + 50;
+        const y2 = p2.row * 100 + 50;
+
+        if (info.type === 'ladder') {
+          // Gambar Tangga Emas/Hijau dengan anak tangga
+          const dx = x2 - x1;
+          const dy = y2 - y1;
+          const len = Math.hypot(dx, dy);
+          const nx = (-dy / len) * 11; // Vektor tegak lurus untuk lebar tangga
+          const ny = (dx / len) * 11;
+
+          const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          g.setAttribute('opacity', '0.88');
+
+          // Dua tiang tangga
+          const rail1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          rail1.setAttribute('x1', x1 + nx);
+          rail1.setAttribute('y1', y1 + ny);
+          rail1.setAttribute('x2', x2 + nx);
+          rail1.setAttribute('y2', y2 + ny);
+          rail1.setAttribute('stroke', '#059669');
+          rail1.setAttribute('stroke-width', '5');
+          rail1.setAttribute('stroke-linecap', 'round');
+
+          const rail2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          rail2.setAttribute('x1', x1 - nx);
+          rail2.setAttribute('y1', y1 - ny);
+          rail2.setAttribute('x2', x2 - nx);
+          rail2.setAttribute('y2', y2 - ny);
+          rail2.setAttribute('stroke', '#059669');
+          rail2.setAttribute('stroke-width', '5');
+          rail2.setAttribute('stroke-linecap', 'round');
+
+          g.appendChild(rail1);
+          g.appendChild(rail2);
+
+          // Anak tangga
+          const steps = Math.max(4, Math.floor(len / 28));
+          for (let s = 1; s < steps; s++) {
+            const t = s / steps;
+            const rx = x1 + dx * t;
+            const ry = y1 + dy * t;
+
+            const rung = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            rung.setAttribute('x1', rx + nx);
+            rung.setAttribute('y1', ry + ny);
+            rung.setAttribute('x2', rx - nx);
+            rung.setAttribute('y2', ry - ny);
+            rung.setAttribute('stroke', '#FBBF24');
+            rung.setAttribute('stroke-width', '4');
+            rung.setAttribute('stroke-linecap', 'round');
+            g.appendChild(rung);
+          }
+
+          svg.appendChild(g);
+        } else {
+          // Gambar Ular Bergelombang (Kurva Bezier)
+          const mx = (x1 + x2) / 2;
+          const my = (y1 + y2) / 2;
+          const dx = x2 - x1;
+          const dy = y2 - y1;
+          const cx1 = x1 + dx * 0.25 - dy * 0.22;
+          const cy1 = y1 + dy * 0.25 + dx * 0.22;
+          const cx2 = x1 + dx * 0.75 + dy * 0.22;
+          const cy2 = y1 + dy * 0.75 - dx * 0.22;
+
+          const pathData = `M ${x1} ${y1} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${x2} ${y2}`;
+
+          const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          g.setAttribute('opacity', '0.85');
+
+          // Badan ular luar
+          const bodyOuter = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          bodyOuter.setAttribute('d', pathData);
+          bodyOuter.setAttribute('fill', 'none');
+          bodyOuter.setAttribute('stroke', '#7E22CE');
+          bodyOuter.setAttribute('stroke-width', '10');
+          bodyOuter.setAttribute('stroke-linecap', 'round');
+
+          // Corak garis ular dalam
+          const bodyInner = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          bodyInner.setAttribute('d', pathData);
+          bodyInner.setAttribute('fill', 'none');
+          bodyInner.setAttribute('stroke', '#F472B6');
+          bodyInner.setAttribute('stroke-width', '4');
+          bodyInner.setAttribute('stroke-dasharray', '8 8');
+          bodyInner.setAttribute('stroke-linecap', 'round');
+
+          // Kepala ular di titik awal (x1, y1)
+          const head = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          head.setAttribute('cx', x1);
+          head.setAttribute('cy', y1);
+          head.setAttribute('r', '9');
+          head.setAttribute('fill', '#6B21A8');
+          head.setAttribute('stroke', '#FDE047');
+          head.setAttribute('stroke-width', '2');
+
+          g.appendChild(bodyOuter);
+          g.appendChild(bodyInner);
+          g.appendChild(head);
+          svg.appendChild(g);
+        }
+      });
+    }
+
+    /* =========================================================================
+       7. POSISI PION REAL-TIME DI ATAS PAPAN
+       ========================================================================= */
+    function updatePawnPositions(animateIndex = -1) {
+      const sameSquare = gameState.players[0].pos === gameState.players[1].pos;
+
+      gameState.players.forEach((player, idx) => {
+        const pawnEl = document.getElementById(`pawn-${idx}`);
+        const { row, col } = getGridCoords(player.pos);
+
+        // Persentase posisi tengah sel (0..100%)
+        let leftPct = col * 20 + 10;
+        let topPct = row * 20 + 10;
+
+        // Geser sedikit agar tidak saling menutupi jika berada di kotak yang sama
+        if (sameSquare) {
+          leftPct += (idx === 0 ? -3.2 : 3.2);
+          topPct += (idx === 0 ? -2.2 : 2.2);
+        }
+
+        pawnEl.style.left = `${leftPct}%`;
+        pawnEl.style.top = `${topPct}%`;
+
+        if (animateIndex === idx) {
+          pawnEl.classList.remove('animate-hop');
+          void pawnEl.offsetWidth; // trigger reflow
+          pawnEl.classList.add('animate-hop');
+        }
+      });
+
+      // Perbarui angka statistik di kartu pemain
+      document.getElementById('pos-p0').textContent = gameState.players[0].pos;
+      document.getElementById('rolls-p0').textContent = gameState.players[0].rolls;
+      document.getElementById('correct-p0').textContent = gameState.players[0].correct;
+
+      document.getElementById('pos-p1').textContent = gameState.players[1].pos;
+      document.getElementById('rolls-p1').textContent = gameState.players[1].rolls;
+      document.getElementById('correct-p1').textContent = gameState.players[1].correct;
+    }
+
+    /* =========================================================================
+       8. VISUAL DADU SVG (1 - 6)
+       ========================================================================= */
+    function renderDiceFace(value) {
+      const svg = document.getElementById('dice-svg');
+      const dotColor = gameState.currentTurn === 0 ? '#E11D48' : '#0284C7';
+      const pips = {
+        1: [[50, 50]],
+        2: [[28, 28], [72, 72]],
+        3: [[26, 26], [50, 50], [74, 74]],
+        4: [[28, 28], [72, 28], [28, 72], [72, 72]],
+        5: [[28, 28], [72, 28], [50, 50], [28, 72], [72, 72]],
+        6: [[28, 24], [72, 24], [28, 50], [72, 50], [28, 76], [72, 76]]
+      };
+
+      const coords = pips[value] || pips[1];
+      svg.innerHTML = coords
+        .map(([cx, cy]) => `<circle cx="${cx}" cy="${cy}" r="10.5" fill="${dotColor}" />`)
+        .join('');
+    }
+
+    /* =========================================================================
+       9. ALUR PERMAINAN & MEKANIK KOCOK DADU
+       ========================================================================= */
+    function shuffleQuestions() {
+      const arr = [...QUESTION_BANK];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function getNextQuestion() {
+      if (gameState.questionPool.length === 0) {
+        gameState.questionPool = shuffleQuestions();
+      }
+      return gameState.questionPool.pop();
+    }
+
+    function startGame(event) {
+      event.preventDefault();
+      SoundFX.init();
+
+      const p1Name = document.getElementById('input-p1').value.trim() || 'Pemain 1';
+      const p2Name = document.getElementById('input-p2').value.trim() || 'Pemain 2';
+      const teamName = document.getElementById('input-team').value.trim() || 'Tim Nusantara';
+
+      gameState = {
+        players: [
+          { name: p1Name, color: 'red', pos: 1, rolls: 0, correct: 0 },
+          { name: p2Name, color: 'blue', pos: 1, rolls: 0, correct: 0 }
+        ],
+        team: teamName,
+        currentTurn: 0,
+        isAnimating: false,
+        questionPool: shuffleQuestions(),
+        pendingSpecial: null,
+        lastAnswerCorrect: false
+      };
+
+      document.getElementById('display-team').textContent = teamName;
+      document.getElementById('name-p0').textContent = p1Name;
+      document.getElementById('name-p1').textContent = p2Name;
+
+      renderBoard();
+      updateTurnUI();
+      updatePawnPositions();
+      renderDiceFace(1);
+      setStatusMessage(`Giliran ${p1Name}! Kocok dadu untuk melangkah.`);
+      showScreen('game-screen');
+      SoundFX.step(2);
+    }
+
+    function playAgainSamePlayers() {
+      gameState.players.forEach(p => {
+        p.pos = 1;
+        p.rolls = 0;
+        p.correct = 0;
+      });
+      gameState.currentTurn = 0;
+      gameState.isAnimating = false;
+      gameState.pendingSpecial = null;
+      if (gameState.questionPool.length < 5) {
+        gameState.questionPool = shuffleQuestions();
+      }
+
+      updateTurnUI();
+      updatePawnPositions();
+      renderDiceFace(1);
+      setStatusMessage(`Pertandingan baru! Giliran ${gameState.players[0].name}.`);
+      showScreen('game-screen');
+      SoundFX.step(3);
+    }
+
+    function updateTurnUI() {
+      const idx = gameState.currentTurn;
+      const activePlayer = gameState.players[idx];
+      const badge = document.getElementById('turn-badge');
+      const dot = document.getElementById('turn-dot');
+      const text = document.getElementById('turn-text');
+      const card0 = document.getElementById('card-p0');
+      const card1 = document.getElementById('card-p1');
+
+      text.textContent = `Giliran: ${activePlayer.name}`;
+
+      if (idx === 0) {
+        badge.className = 'inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold bg-rose-100 text-rose-700 border-2 border-rose-300 mb-3';
+        dot.className = 'w-3 h-3 rounded-full bg-rose-600 animate-ping';
+        card0.className = 'bg-white rounded-2xl p-3.5 border-4 border-rose-500 shadow-lg transition-all scale-[1.02]';
+        card1.className = 'bg-white/80 rounded-2xl p-3.5 border-2 border-sky-200 shadow-sm transition-all opacity-75';
+      } else {
+        badge.className = 'inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold bg-sky-100 text-sky-700 border-2 border-sky-300 mb-3';
+        dot.className = 'w-3 h-3 rounded-full bg-sky-600 animate-ping';
+        card1.className = 'bg-white rounded-2xl p-3.5 border-4 border-sky-500 shadow-lg transition-all scale-[1.02]';
+        card0.className = 'bg-white/80 rounded-2xl p-3.5 border-2 border-rose-200 shadow-sm transition-all opacity-75';
+      }
+    }
+
+    function setStatusMessage(msg) {
+      document.getElementById('game-status-msg').textContent = msg;
+    }
+
+    function setDiceControlsEnabled(enabled) {
+      const btn = document.getElementById('btn-roll-dice');
+      const visual = document.getElementById('dice-visual');
+      btn.disabled = !enabled;
+      visual.disabled = !enabled;
+    }
+
+    async function handleRollDice() {
+      if (gameState.isAnimating) return;
+      gameState.isAnimating = true;
+      setDiceControlsEnabled(false);
+
+      const diceVisual = document.getElementById('dice-visual');
+      diceVisual.classList.add('animate-dice');
+      SoundFX.roll();
+      setStatusMessage('Mengocok dadu...');
+
+      // Animasi pergantian angka dadu acak selama 450ms
+      const rollAnimInterval = setInterval(() => {
+        const tempVal = Math.floor(Math.random() * 6) + 1;
+        renderDiceFace(tempVal);
+      }, 75);
+
+      await sleep(480);
+      clearInterval(rollAnimInterval);
+      diceVisual.classList.remove('animate-dice');
+
+      const rolled = Math.floor(Math.random() * 6) + 1;
+      renderDiceFace(rolled);
+
+      const playerIdx = gameState.currentTurn;
+      const player = gameState.players[playerIdx];
+      player.rolls += 1;
+
+      setStatusMessage(`${player.name} mendapat angka ${rolled}!`);
+      await movePlayerSteps(playerIdx, rolled);
+    }
+
+    async function movePlayerSteps(playerIdx, steps) {
+      const player = gameState.players[playerIdx];
+      let direction = 1; // 1 = maju, -1 = memantul mundur jika melewati 25
+
+      for (let i = 0; i < steps; i++) {
+        if (player.pos === 25 && direction === 1) {
+          direction = -1;
+          setStatusMessage('Kelebihan langkah! Memantul mundur...');
+        }
+        player.pos += direction;
+        updatePawnPositions(playerIdx);
+        SoundFX.step(i);
+        await sleep(300);
+      }
+
+      // Cek apakah tepat mendarat di Kotak 25 (FINISH)
+      if (player.pos === 25) {
+        await sleep(250);
+        handlePlayerWin(playerIdx);
+        return;
+      }
+
+      // Cek apakah mendarat di Kotak Spesial (⭐)
+      const special = SPECIAL_TILES[player.pos];
+      if (special) {
+        setStatusMessage(`⭐ Kotak Spesial! ${player.name} harus menjawab kuis unsur tari!`);
+        await sleep(450);
+        openQuizModal(playerIdx, player.pos, special);
+        return;
+      }
+
+      // Ganti giliran ke pemain berikutnya
+      switchTurn();
+    }
+
+    function switchTurn() {
+      gameState.currentTurn = gameState.currentTurn === 0 ? 1 : 0;
+      gameState.isAnimating = false;
+      updateTurnUI();
+      setDiceControlsEnabled(true);
+      setStatusMessage(`Giliran ${gameState.players[gameState.currentTurn].name}! Kocok dadu.`);
+    }
+
+    /* =========================================================================
+       10. SISTEM KUIS INTERAKTIF (MODAL KOTAK SPESIAL ⭐)
+       ========================================================================= */
+    function openQuizModal(playerIdx, squareNum, special) {
+      const player = gameState.players[playerIdx];
+      const questionObj = getNextQuestion();
+
+      gameState.pendingSpecial = {
+        playerIdx,
+        squareNum,
+        special,
+        questionObj
+      };
+      gameState.lastAnswerCorrect = false;
+
+      // Isi UI Modal Kuis
+      document.getElementById('quiz-category-badge').textContent = questionObj.category;
+      document.getElementById('quiz-player-name').textContent = player.name;
+      document.getElementById('quiz-question-text').textContent = questionObj.question;
+
+      const stakeBadge = document.getElementById('quiz-stake-badge');
+      if (special.type === 'ladder') {
+        stakeBadge.className = 'bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full border border-emerald-300';
+        stakeBadge.textContent = `🪜 Tangga (Kotak ${squareNum} ➔ ${special.target}): Jawab BENAR untuk naik!`;
+      } else {
+        stakeBadge.className = 'bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full border border-purple-300';
+        stakeBadge.textContent = `🐍 Ular (Kotak ${squareNum} ➔ ${special.target}): Jawab BENAR agar tidak turun!`;
+      }
+
+      const optionsContainer = document.getElementById('quiz-options-container');
+      optionsContainer.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D'];
+      questionObj.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'quiz-option-btn w-full text-left p-3.5 rounded-2xl border-2 border-slate-200 hover:border-amber-400 hover:bg-amber-50 transition flex items-start gap-3 font-semibold text-slate-800 text-sm sm:text-base';
+        btn.innerHTML = `
+          <span class="w-7 h-7 rounded-xl bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 mt-0.5">${letters[idx]}</span>
+          <span class="flex-1">${optText}</span>
+        `;
+        btn.onclick = () => submitQuizAnswer(idx);
+        optionsContainer.appendChild(btn);
+      });
+
+      document.getElementById('quiz-feedback-box').classList.add('hidden');
+      document.getElementById('quiz-modal').classList.remove('hidden');
+    }
+
+    function submitQuizAnswer(selectedIndex) {
+      const { playerIdx, special, questionObj } = gameState.pendingSpecial;
+      const isCorrect = selectedIndex === questionObj.answer;
+      gameState.lastAnswerCorrect = isCorrect;
+
+      const optionButtons = document.querySelectorAll('.quiz-option-btn');
+      optionButtons.forEach((btn, idx) => {
+        btn.disabled = true;
+        btn.classList.remove('hover:border-amber-400', 'hover:bg-amber-50');
+        if (idx === questionObj.answer) {
+          btn.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-900');
+          btn.querySelector('span:first-child').className = 'w-7 h-7 rounded-xl bg-emerald-600 text-white font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 mt-0.5';
+        } else if (idx === selectedIndex && !isCorrect) {
+          btn.classList.add('bg-rose-100', 'border-rose-500', 'text-rose-900');
+          btn.querySelector('span:first-child').className = 'w-7 h-7 rounded-xl bg-rose-600 text-white font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 mt-0.5';
+        } else {
+          btn.classList.add('opacity-60');
+        }
+      });
+
+      const feedbackBox = document.getElementById('quiz-feedback-box');
+      const feedbackTitle = document.getElementById('quiz-feedback-title');
+      const feedbackExp = document.getElementById('quiz-feedback-explanation');
+
+      if (isCorrect) {
+        SoundFX.correct();
+        gameState.players[playerIdx].correct += 1;
+        feedbackBox.className = 'mt-4 p-4 rounded-2xl border-2 bg-emerald-50 border-emerald-400 text-emerald-900';
+        feedbackTitle.textContent = special.type === 'ladder'
+          ? `🎉 Jawaban Benar! Kamu berhak menaiki tangga ke Kotak ${special.target}!`
+          : `🛡️ Jawaban Benar! Kamu selamat dari ular dan tetap di Kotak ${gameState.players[playerIdx].pos}!`;
+      } else {
+        SoundFX.wrong();
+        feedbackBox.className = 'mt-4 p-4 rounded-2xl border-2 bg-rose-50 border-rose-400 text-rose-900';
+        feedbackTitle.textContent = special.type === 'ladder'
+          ? `😅 Kurang Tepat! Kamu belum bisa naik tangga dan tetap di Kotak ${gameState.players[playerIdx].pos}.`
+          : `🐍 Kurang Tepat! Kamu terpeleset ular turun ke Kotak ${special.target}!`;
+      }
+
+      feedbackExp.textContent = `Pembahasan: ${questionObj.explanation}`;
+      feedbackBox.classList.remove('hidden');
+    }
+
+    async function closeQuizAndResolve() {
+      document.getElementById('quiz-modal').classList.add('hidden');
+      const { playerIdx, special } = gameState.pendingSpecial;
+      const player = gameState.players[playerIdx];
+      const isCorrect = gameState.lastAnswerCorrect;
+
+      if (special.type === 'ladder' && isCorrect) {
+        setStatusMessage(`🪜 ${player.name} menaiki tangga ke Kotak ${special.target}!`);
+        SoundFX.ladder();
+        await sleep(250);
+        player.pos = special.target;
+        updatePawnPositions(playerIdx);
+        await sleep(450);
+
+        if (player.pos === 25) {
+          handlePlayerWin(playerIdx);
+          return;
+        }
+      } else if (special.type === 'snake' && !isCorrect) {
+        setStatusMessage(`🐍 ${player.name} meluncur turun ke Kotak ${special.target}!`);
+        SoundFX.snake();
+        await sleep(250);
+        player.pos = special.target;
+        updatePawnPositions(playerIdx);
+        await sleep(450);
+      } else {
+        updatePawnPositions();
+      }
+
+      gameState.pendingSpecial = null;
+      switchTurn();
+    }
+
+    /* =========================================================================
+       11. KEMENANGAN, GAME OVER & LEADERBOARD (LOCALSTORAGE)
+       ========================================================================= */
+    function calculateMaestroScore(player) {
+      const baseWin = 500;
+      const quizBonus = player.correct * 100;
+      const speedBonus = Math.max(0, (30 - player.rolls) * 15);
+      return baseWin + quizBonus + speedBonus;
+    }
+
+    function handlePlayerWin(winnerIdx) {
+      gameState.isAnimating = false;
+      const winner = gameState.players[winnerIdx];
+      const totalScore = calculateMaestroScore(winner);
+
+      SoundFX.win();
+      launchConfetti();
+
+      // Simpan skor ke localStorage
+      saveToLeaderboard({
+        name: winner.name,
+        team: gameState.team,
+        rolls: winner.rolls,
+        correct: winner.correct,
+        score: totalScore,
+        date: new Date().toLocaleDateString('id-ID')
+      });
+
+      // Tampilkan data pada layar Game Over
+      document.getElementById('winner-name').textContent = winner.name;
+      document.getElementById('winner-team').textContent = gameState.team;
+      document.getElementById('winner-rolls').textContent = winner.rolls;
+      document.getElementById('winner-correct').textContent = winner.correct;
+      document.getElementById('winner-score').textContent = totalScore;
+
+      showScreen('gameover-screen');
+    }
+
+    function getLeaderboardData() {
+      try {
+        const raw = localStorage.getItem(LEADERBOARD_KEY);
+        if (raw) {
+          return JSON.parse(raw);
+        }
+      } catch (e) {
+        console.error('Gagal membaca localStorage:', e);
+      }
+
+      // Data contoh awal agar podium terlihat menarik
+      const defaultData = [
+        { name: 'Nadia Putri', team: 'Kelas 8A - SMPN 1 Nusantara', rolls: 6, correct: 3, score: 1160, date: 'Contoh' },
+        { name: 'Dimas Pratama', team: 'Kelas 8C - SMP Budaya Bangsa', rolls: 8, correct: 2, score: 1030, date: 'Contoh' },
+        { name: 'Ayu Lestari', team: 'Kelas 7B - SMPN 2 Pelita', rolls: 9, correct: 2, score: 1015, date: 'Contoh' }
+      ];
+      saveLeaderboardArray(defaultData);
+      return defaultData;
+    }
+
+    function saveLeaderboardArray(arr) {
+      try {
+        localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(arr));
+      } catch (e) {
+        console.error('Gagal menyimpan ke localStorage:', e);
+      }
+    }
+
+    function saveToLeaderboard(entry) {
+      const list = getLeaderboardData();
+      list.push(entry);
+      // Urutkan berdasarkan skor tertinggi, lalu jumlah lemparan paling sedikit
+      list.sort((a, b) => b.score - a.score || a.rolls - b.rolls);
+      saveLeaderboardArray(list.slice(0, 20));
+    }
+
+    function renderLeaderboard() {
+      const list = getLeaderboardData();
+      const podiumContainer = document.getElementById('podium-container');
+      const listContainer = document.getElementById('leaderboard-list');
+
+      // Urutan tampilan podium: Juara 2 (Kiri), Juara 1 (Tengah), Juara 3 (Kanan)
+      const podiumSlots = [
+        { rank: 2, idx: 1, height: 'h-24', bg: 'from-slate-300 to-slate-400', border: 'border-slate-500', medal: '🥈' },
+        { rank: 1, idx: 0, height: 'h-32', bg: 'from-amber-300 to-yellow-500', border: 'border-amber-600', medal: '🥇' },
+        { rank: 3, idx: 2, height: 'h-20', bg: 'from-orange-300 to-amber-600', border: 'border-orange-700', medal: '🥉' }
+      ];
+
+      podiumContainer.innerHTML = podiumSlots.map(slot => {
+        const item = list[slot.idx];
+        if (!item) {
+          return `
+            <div class="flex flex-col items-center">
+              <div class="text-xs text-slate-400 font-semibold mb-1">-</div>
+              <div class="w-full ${slot.height} rounded-t-2xl bg-slate-200 border-2 border-slate-300 flex flex-col items-center justify-center text-slate-400 font-bold">
+                <span>${slot.medal}</span>
+                <span class="text-xs">#${slot.rank}</span>
+              </div>
+            </div>
+          `;
+        }
+        return `
+          <div class="flex flex-col items-center text-center">
+            <span class="text-2xl sm:text-3xl mb-0.5">${slot.medal}</span>
+            <p class="font-bold text-slate-800 text-xs sm:text-sm truncate w-full px-1">${item.name}</p>
+            <p class="text-[10px] text-slate-500 truncate w-full px-1 mb-1">${item.team}</p>
+            <div class="w-full ${slot.height} rounded-t-2xl bg-gradient-to-b ${slot.bg} border-t-4 border-x-2 ${slot.border} shadow-md flex flex-col items-center justify-center p-1 text-slate-900">
+              <span class="font-extrabold text-sm sm:text-base">${item.score}</span>
+              <span class="text-[10px] font-bold opacity-80">${item.rolls}x Dadu</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (list.length === 0) {
+        listContainer.innerHTML = `<p class="p-6 text-center text-sm text-slate-500">Belum ada rekor tersimpan.</p>`;
+        return;
+      }
+
+      listContainer.innerHTML = list.map((item, idx) => `
+        <div class="flex items-center justify-between px-4 py-3 bg-white hover:bg-amber-50/60 transition">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="w-7 h-7 rounded-full ${idx < 3 ? 'bg-amber-100 text-amber-800 border border-amber-400' : 'bg-slate-100 text-slate-600'} font-bold text-xs flex items-center justify-center shrink-0">
+              #${idx + 1}
+            </span>
+            <div class="min-w-0">
+              <p class="font-bold text-slate-800 text-sm truncate">${item.name}</p>
+              <p class="text-[11px] text-slate-500 truncate">${item.team} • ${item.rolls} lemparan • ${item.correct}⭐</p>
+            </div>
+          </div>
+          <span class="font-extrabold text-indigo-700 text-sm sm:text-base shrink-0 ml-2">${item.score} pts</span>
+        </div>
+      `).join('');
+    }
+
+    /* =========================================================================
+       12. NAVIGASI LAYAR & MODAL KONFIRMASI KUSTOM
+       ========================================================================= */
+    function showScreen(screenId) {
+      const screens = ['start-screen', 'game-screen', 'gameover-screen', 'leaderboard-screen'];
+      screens.forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(screenId).classList.remove('hidden');
+
+      const navHomeBtn = document.getElementById('btn-nav-home');
+      if (screenId === 'start-screen') {
+        navHomeBtn.classList.add('hidden');
+      } else {
+        navHomeBtn.classList.remove('hidden');
+      }
+
+      if (screenId === 'leaderboard-screen') {
+        renderLeaderboard();
+      }
+    }
+
+    function openConfirmModal(title, message, onConfirmCallback) {
+      document.getElementById('confirm-title').textContent = title;
+      document.getElementById('confirm-message').textContent = message;
+      const yesBtn = document.getElementById('btn-confirm-yes');
+      yesBtn.onclick = () => {
+        closeConfirmModal();
+        onConfirmCallback();
+      };
+      document.getElementById('confirm-modal').classList.remove('hidden');
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('confirm-modal').classList.add('hidden');
+    }
+
+    function requestGoHome() {
+      const isGameActive = !document.getElementById('game-screen').classList.contains('hidden');
+      if (isGameActive) {
+        openConfirmModal(
+          'Kembali ke Menu Utama?',
+          'Progres permainan yang sedang berlangsung akan dihentikan.',
+          () => showScreen('start-screen')
+        );
+      } else {
+        showScreen('start-screen');
+      }
+    }
+
+    function requestRestartGame() {
+      openConfirmModal(
+        'Ulangi Pertandingan?',
+        'Posisi kedua pion akan dikembalikan ke Kotak 1.',
+        () => playAgainSamePlayers()
+      );
+    }
+
+    function requestResetLeaderboard() {
+      openConfirmModal(
+        'Hapus Semua Rekor?',
+        'Seluruh daftar skor di papan peringkat akan dikosongkan.',
+        () => {
+          saveLeaderboardArray([]);
+          renderLeaderboard();
+        }
+      );
+    }
+
+    /* =========================================================================
+       13. UTILITAS CONFETTI & SLEEP
+       ========================================================================= */
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function launchConfetti() {
+      const container = document.getElementById('confetti-container');
+      container.innerHTML = '';
+      const colors = ['#F43F5E', '#F59E0B', '#10B981', '#3B82F6', '#8B5CF6'];
+
+      for (let i = 0; i < 45; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece rounded-sm';
+        piece.style.left = `${Math.random() * 100}vw`;
+        piece.style.width = `${Math.random() * 8 + 6}px`;
+        piece.style.height = `${Math.random() * 12 + 6}px`;
+        piece.style.backgroundColor = colors[i % colors.length];
+        piece.style.animationDuration = `${Math.random() * 2 + 2.2}s`;
+        piece.style.animationDelay = `${Math.random() * 0.6}s`;
+        container.appendChild(piece);
+      }
+
+      setTimeout(() => {
+        container.innerHTML = '';
+      }, 4500);
+    }
+
+    // Inisialisasi papan awal saat halaman dimuat
+    window.addEventListener('DOMContentLoaded', () => {
+      renderBoard();
+    });
+  </script>
+</body>
+</html>
